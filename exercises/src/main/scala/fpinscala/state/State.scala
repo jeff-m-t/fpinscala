@@ -28,17 +28,46 @@ object RNG {
       (f(a), rng2)
     }
 
-  def positiveInt(rng: RNG): (Int, RNG) = sys.error("todo")
+  def positiveInt(rng: RNG): (Int, RNG) = {
+    val (thisInt, nextRng) = rng.nextInt
+    if(thisInt != Int.MinValue) (thisInt.abs,nextRng) else positiveInt(nextRng)
+  }
 
-  def double(rng: RNG): (Double, RNG) = sys.error("todo")
+  def double(rng: RNG): (Double, RNG) = {
+    val (thisInt, nextRng) = rng.nextInt
+    val d = thisInt.toDouble / Int.MaxValue.toDouble
+    (d,nextRng)
+  }
 
-  def intDouble(rng: RNG): ((Int,Double), RNG) = sys.error("todo")
+  def intDouble(rng: RNG): ((Int,Double), RNG) = {
+    val (i,rng2) = rng.nextInt
+    val (d,rng3) = double(rng2)
+    ((i,d),rng3)
+  }
 
-  def doubleInt(rng: RNG): ((Double,Int), RNG) = sys.error("todo")
+  def doubleInt(rng: RNG): ((Double,Int), RNG) = {
+    val (d,rng2) = double(rng)
+    val (i,rng3) = rng2.nextInt
+    ((d,i),rng3)
+  } 
 
-  def double3(rng: RNG): ((Double,Double,Double), RNG) = sys.error("todo")
+  def double3(rng: RNG): ((Double,Double,Double), RNG) = {
+    val (d1,rng2) = double(rng)
+    val (d2,rng3) = double(rng2)
+    val (d3,rng4) = double(rng3)
+    
+    ((d1,d2,d3), rng4)
+  }
 
-  def ints(count: Int)(rng: RNG): (List[Int], RNG) = sys.error("todo")
+  def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
+    if (count == 0) (Nil, rng)
+    else {
+      val (thisInt, nextRng) = rng.nextInt
+      val (rest, finalRng) = ints(count-1)(nextRng)
+      
+      (thisInt :: rest, finalRng)
+    }
+  }
 
   def positiveMax(n: Int): Rand[Int] = sys.error("todo")
 
@@ -67,4 +96,14 @@ case class Machine(locked: Boolean, candies: Int, coins: Int)
 object State {
   type Rand[A] = State[RNG, A]
   def simulateMachine(inputs: List[Input]): State[Machine, Int] = sys.error("todo")
+}
+
+object test {
+  def main(args: Array[String]) = {
+    
+    val res = RNG.ints(5)(RNG.simple(5L))
+    
+    println(res)
+    
+  }
 }

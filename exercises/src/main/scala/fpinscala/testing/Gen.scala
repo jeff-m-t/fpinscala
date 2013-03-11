@@ -18,7 +18,7 @@ trait Prop {
 }
 
 object Prop {
-  def forAll[A](gen: Gen[A])(f: A => Boolean): Prop = ???
+  def forAll[A](gen: Gen[A])(f: A => Boolean): Prop = null
 }
 
 trait Status {
@@ -30,12 +30,12 @@ object Status {
 }
 
 object Gen {
-  def unit[A](a: => A): Gen[A] = ???
+  def unit[A](a: => A): Gen[A] = null
 }
 
 trait Gen[A] {
-  def map[A,B](f: A => B): Gen[B] = ???
-  def flatMap[A,B](f: A => Gen[B]): Gen[B] = ???
+  def map[A,B](f: A => B): Gen[B] = null
+  def flatMap[A,B](f: A => Gen[B]): Gen[B] = null
 }
 
 trait SGen[+A] {
